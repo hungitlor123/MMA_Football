@@ -1,0 +1,20 @@
+export const colors = {
+  primary: "#1B5E20",
+  secondary: "#1565C0",
+  accent: "#FFD600",
+  background: "#F3F7F0",
+  surface: "#FFFFFF",
+  card: "#E8F5E9",
+  text: {
+    primary: "#222222",
+    secondary: "#757575",
+    placeholder: "#BDBDBD",
+    inverse: "#FFFFFF",
+  },
+  border: "#C8E6C9",
+  shadow: "#000000",
+  danger: "#D32F2F",
+  warning: "#FFA000",
+  success: "#388E3C",
+  info: "#0288D1",
+};
