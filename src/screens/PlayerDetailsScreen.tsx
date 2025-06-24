@@ -8,13 +8,15 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
+  TextInput,
+  Modal,
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAppDispatch, useAppSelector } from '../service/store/hooks';
 import { addToFavorites, removeFromFavorites } from '../service/slices/favoritesSlice';
 import { PlayerDetailsRouteProp, Player } from '../types';
-import { FootballPlayerCard } from '../components';
+import { FootballPlayerCard, GeminiPlayerAnalysis } from '../components';
 import { useAppNavigation } from '../hooks/useAppNavigation';
 import { colors } from '../styles/colors';
 import { spacing, typography, borderRadius } from '../styles/spacing';
@@ -29,6 +31,7 @@ export default function PlayerDetailsScreen() {
   const { favorites } = useAppSelector(state => state.favorites);
 
   const [player, setPlayer] = useState<Player | null>(null);
+  const [showAIOverlay, setShowAIOverlay] = useState(false);
 
   useEffect(() => {
     const foundPlayer = players.find(p => p.id === playerId);
@@ -223,6 +226,30 @@ export default function PlayerDetailsScreen() {
         </View>
         <View style={{ height: spacing.xxl }} />
       </ScrollView>
+      {/* Floating AI Button */}
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => setShowAIOverlay(true)}
+        activeOpacity={0.85}
+      >
+        <Ionicons name="bulb" size={28} color={colors.surface} />
+      </TouchableOpacity>
+      {/* AI Overlay Modal */}
+      <Modal
+        visible={showAIOverlay}
+        animationType="slide"
+        transparent
+        onRequestClose={() => setShowAIOverlay(false)}
+      >
+        <View style={styles.overlayBackdrop}>
+          <View style={styles.overlayBox}>
+            <TouchableOpacity style={styles.overlayCloseBtn} onPress={() => setShowAIOverlay(false)}>
+              <Ionicons name="close" size={24} color={colors.danger} />
+            </TouchableOpacity>
+            <GeminiPlayerAnalysis player={player} />
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -541,5 +568,48 @@ const styles = StyleSheet.create({
   },
   actionButtonTextFavorited: {
     color: colors.surface,
+  },
+  fab: {
+    position: 'absolute',
+    bottom: 32,
+    right: 24,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: colors.secondary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: colors.shadow,
+    shadowOpacity: 0.18,
+    shadowRadius: 8,
+    elevation: 6,
+    zIndex: 100,
+  },
+  overlayBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.25)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  overlayBox: {
+    width: '90%',
+    maxHeight: '80%',
+    backgroundColor: colors.surface,
+    borderRadius: 20,
+    paddingTop: 16,
+    paddingBottom: 8,
+    paddingHorizontal: 0,
+    alignItems: 'center',
+    shadowColor: colors.shadow,
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  overlayCloseBtn: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    zIndex: 10,
+    padding: 8,
   },
 }); 

@@ -111,19 +111,6 @@ export default function HomeScreen() {
             <Text style={styles.headerSubtitle}>{getDisplayData().length} players</Text>
           </View>
         </View>
-        <TouchableOpacity
-          style={[
-            styles.favoritesToggle,
-            showFavoritesOnly && styles.favoritesToggleActive
-          ]}
-          onPress={() => setShowFavoritesOnly(!showFavoritesOnly)}
-        >
-          <Ionicons
-            name={showFavoritesOnly ? 'heart' : 'heart-outline'}
-            size={22}
-            color={showFavoritesOnly ? colors.surface : colors.primary}
-          />
-        </TouchableOpacity>
       </View>
 
       {/* Filter chip */}
@@ -218,20 +205,6 @@ const styles = StyleSheet.create({
   headerSubtitle: {
     fontSize: typography.sizes.md,
     color: colors.surface + 'CC',
-  },
-  favoritesToggle: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: colors.surface,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: colors.primary,
-  },
-  favoritesToggleActive: {
-    backgroundColor: colors.primary,
-    borderColor: colors.surface,
   },
   filtersContainer: {
     backgroundColor: colors.background,

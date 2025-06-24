@@ -10,252 +10,108 @@ src/
 │   ├── Button.tsx       # Customizable button component
 │   ├── Input.tsx        # Input component with validation
 │   ├── Card.tsx         # Card container component
-│   ├── SimilarPlayers.tsx # Player similarity component
 │   └── index.ts         # Component exports
 ├── screens/            # Screen components
 │   ├── HomeScreen.tsx         # Main screen with player grid & filters
 │   ├── SearchScreen.tsx       # Search players functionality
 │   ├── FavoritesScreen.tsx    # Manage favorite players
-│   ├── ProfileScreen.tsx      # User profile (placeholder)
 │   └── PlayerDetailsScreen.tsx # Detailed player information
 ├── navigation/         # Navigation configuration
 │   ├── TabNavigator.tsx       # Bottom tab navigation
 │   └── StackNavigator.tsx     # Stack navigation
 ├── service/           # State management and API
 │   ├── api/           # API services
-│   │   ├── playersApi.ts      # Players API integration
-│   │   ├── geminiApi.ts       # AI service integration
-│   │   └── imageService.ts    # Image handling service
+│   │   └── playersApi.ts      # Players API integration
 │   ├── constants/     # App constants
 │   │   ├── apiConstants.ts    # API endpoints and config
 │   │   └── appConstants.ts    # App-wide constants
 │   ├── slices/        # Redux slices
 │   │   ├── playersSlice.ts    # Players state management
 │   │   ├── favoritesSlice.ts  # Favorites with AsyncStorage
-│   │   ├── profileSlice.ts    # User profile state
 │   │   └── appSlice.ts        # General app settings
 │   └── store/         # Redux store configuration
 │       ├── index.ts           # Store setup
-│       └── hooks.ts           # Typed Redux hooks
-├── hooks/             # Custom React hooks
-│   └── useAppNavigation.ts    # Navigation helper hook
-├── styles/            # Design system
+│       └── hooks.ts           # Redux hooks
+├── styles/            # Global styles and themes
 │   ├── colors.ts      # Color palette
-│   └── spacing.ts     # Spacing constants
+│   └── spacing.ts     # Spacing and typography
 ├── types/             # TypeScript type definitions
-│   ├── index.ts       # Core types (Player, Feedback, etc.)
-│   └── navigation.ts  # Navigation parameter types
+│   ├── index.ts       # Main type definitions
+│   └── navigation.ts  # Navigation types
 └── utils/             # Utility functions
-    ├── storage.ts     # AsyncStorage helpers
-    └── helpers.ts     # General utility functions
+    ├── helpers.ts     # Helper functions
+    └── storage.ts     # Storage utilities
 ```
 
-## ✨ Features
+## 🚀 Features
 
-- **Player Database**: Browse football players from multiple teams
-- **Team Filtering**: Filter players by their respective teams
+- **Player Browsing**: View all football players with detailed information
 - **Search Functionality**: Search players by name, team, or position
-- **Favorites Management**: Save favorite players with AsyncStorage persistence
-- **Player Details**: Detailed view with statistics, ratings, and feedback
-- **Modern UI**: Clean, responsive design with consistent styling
-- **Pull to Refresh**: Refresh player data with pull gesture
-- **Captain Badges**: Visual indicators for team captains
-- **Statistics Display**: Age calculation, playing time formatting, ratings
+- **Favorites Management**: Add/remove players to/from favorites with persistent storage
+- **Modern UI**: Clean, responsive design with football-themed styling
+- **Navigation**: Tab-based navigation with stack navigation for details
+- **State Management**: Redux Toolkit for efficient state management
+- **TypeScript**: Full TypeScript support for better development experience
 
-## 🏈 Player Data Structure
+## 🛠️ Tech Stack
 
-The app displays players with the following information:
+- **React Native** with Expo
+- **TypeScript** for type safety
+- **Redux Toolkit** for state management
+- **React Navigation** for navigation
+- **AsyncStorage** for local data persistence
+- **Expo Vector Icons** for icons
 
-- **Basic Info**: Name, age (calculated from Year of Birth), position
-- **Team Details**: Team name, captain status
-- **Statistics**: Minutes played, passing accuracy percentage
-- **Media**: Player images
-- **Feedback**: User ratings and comments
+## 📱 Screens
 
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Node.js (v16 or later)
-- npm or yarn
-- Expo CLI
-- iOS Simulator (for iOS development)
-- Android Studio (for Android development)
-
-### Installation
-
-1. **Clone the repository**
-
-   ```bash
-   git clone <your-repo-url>
-   cd MobileApp
-   ```
-
-2. **Install dependencies**
-
-   ```bash
-   npm install
-   ```
-
-3. **Start the development server**
-
-   ```bash
-   npm start
-   ```
-
-4. **Run on specific platform**
-
-   ```bash
-   # iOS
-   npm run ios
-
-   # Android
-   npm run android
-
-   # Web
-   npm run web
-   ```
-
-## 📱 Available Scripts
-
-- `npm start` - Start the Expo development server
-- `npm run android` - Run on Android device/emulator
-- `npm run ios` - Run on iOS device/simulator
-- `npm run web` - Run in web browser
-
-## 🔧 Tech Stack
-
-- **React Native** - Mobile app framework
-- **Expo** - Development platform
-- **TypeScript** - Type safety
-- **Redux Toolkit** - State management
-- **React Navigation** - Navigation library
-- **React Native Gesture Handler** - Gesture recognition
-- **React Native Reanimated** - Animations
-- **Async Storage** - Local storage for favorites
-- **Mock API** - External data source for players
-
-## 🎯 App Screens
-
-### Home Screen
-
-- Grid view of all players
-- Team filter buttons with player counts
-- Favorites toggle
-- Pull-to-refresh functionality
-- Player statistics preview
-
-### Search Screen
-
-- Search input with real-time filtering
-- Search by player name, team, or position
-- Results displayed in scrollable list
-- Direct navigation to player details
-
-### Favorites Screen
-
-- List of saved favorite players
-- Remove individual favorites
-- Clear all favorites option
-- Empty state messaging
-- Quick access to player details
-
-### Player Details Screen
-
-- Complete player information
-- Statistics display with formatted data
-- Star ratings from feedback
-- Feedback comments list
-- Add/remove from favorites
-
-### Profile Screen
-
-- User profile placeholder
-- Future user-specific features
-
-## 📊 State Management
-
-The app uses Redux Toolkit with the following slices:
-
-- **playersSlice**: Manages player data, filtering, and search
-- **favoritesSlice**: Handles favorite players with AsyncStorage persistence
-- **profileSlice**: User profile state management
-- **appSlice**: General app settings and theme
-
-```typescript
-// Using typed hooks
-import { useAppDispatch, useAppSelector } from "../service/store/hooks";
-
-// In component
-const dispatch = useAppDispatch();
-const { players, loading } = useAppSelector((state) => state.players);
-const favorites = useAppSelector((state) => state.favorites.items);
-```
-
-## 🌐 API Integration
-
-The app fetches data from a mock API:
-
-- **Base URL**: `https://67dfef5a7635238f9aabc98e.mockapi.io/books/books`
-- **Data Format**: JSON array of player objects
-- **Real-time Updates**: Pull-to-refresh capability
+1. **Home Screen**: Display all players with filtering options
+2. **Search Screen**: Search functionality with real-time results
+3. **Favorites Screen**: Manage favorite players
+4. **Player Details Screen**: Detailed player information with stats
 
 ## 🎨 Design System
 
-### Colors
+- **Colors**: Football-themed green color palette
+- **Typography**: Consistent font sizes and weights
+- **Spacing**: Standardized spacing system
+- **Components**: Reusable UI components
 
-- Primary: Modern blue palette
-- Secondary: Complementary colors
-- Text: High contrast for readability
-- Background: Clean, neutral tones
+## 🔧 Setup & Installation
 
-### Typography
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Start the development server: `npm start`
+4. Run on iOS: `npm run ios` or Android: `npm run android`
 
-- Headers: Bold, prominent sizing
-- Body: Readable, consistent spacing
-- Captions: Subtle, informative text
+## 📦 Dependencies
 
-### Components
+### Core Dependencies
 
-- Cards: Consistent shadows and borders
-- Buttons: Multiple variants (primary, secondary, danger)
-- Inputs: Validation states and feedback
-- Lists: Optimized for mobile scrolling
+- `react-native`: ^0.79.4
+- `expo`: ~53.0.12
+- `@reduxjs/toolkit`: ^2.8.2
+- `react-redux`: ^9.2.0
+- `@react-navigation/native`: ^7.1.14
+- `@react-navigation/bottom-tabs`: ^7.4.1
+- `@react-navigation/stack`: ^7.4.1
 
-## 🔧 Customization
+### UI & Icons
 
-### Adding New Team Filters
+- `@expo/vector-icons`: ^14.1.0
+- `react-native-gesture-handler`: ^2.26.0
+- `react-native-reanimated`: ^3.18.0
+- `react-native-safe-area-context`: ^5.5.0
+- `react-native-screens`: ^4.11.1
 
-Update the team list in `src/service/slices/playersSlice.ts`
+### Storage & Utilities
 
-### Modifying Player Data Structure
+- `@react-native-async-storage/async-storage`: ^2.2.0
+- `redux-persist`: ^6.0.0
+- `react-native-uuid`: ^2.0.3
 
-Update types in `src/types/index.ts` and corresponding API integration
+## 🏃‍♂️ Getting Started
 
-### Styling Changes
-
-Update design tokens in:
-
-- `src/styles/colors.ts`
-- `src/styles/spacing.ts`
-
-## 🚀 Future Enhancements
-
-- User authentication and profiles
-- Player comparison features
-- Advanced statistics and analytics
-- Social features and sharing
-- Offline data caching
-- Push notifications
-
-## 📖 Contributing
-
-1. Follow the existing folder structure
-2. Use TypeScript for all new files
-3. Follow the component patterns established
-4. Update types when adding new features
-5. Test on both iOS and Android
-6. Maintain consistent styling with design system
+The app is ready to run with Expo. Simply start the development server and scan the QR code with the Expo Go app on your device.
 
 ## 📄 License
 

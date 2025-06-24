@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   Alert,
+  TextInput,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAppDispatch, useAppSelector } from '../service/store/hooks';
@@ -22,6 +23,8 @@ export default function FavoritesScreen() {
   const dispatch = useAppDispatch();
 
   const { favorites } = useAppSelector(state => state.favorites);
+
+  const [search, setSearch] = useState('');
 
   const handlePlayerPress = (player: Player) => {
     navigation.navigate('PlayerDetails', { playerId: player.id });
@@ -57,6 +60,14 @@ export default function FavoritesScreen() {
     );
   };
 
+  const filteredFavorites = search.trim()
+    ? favorites.filter(player =>
+      player.playerName.toLowerCase().includes(search.toLowerCase()) ||
+      player.team.toLowerCase().includes(search.toLowerCase()) ||
+      player.position.toLowerCase().includes(search.toLowerCase())
+    )
+    : favorites;
+
   const renderPlayer = ({ item }: { item: Player }) => (
     <FootballPlayerCard
       player={item}
@@ -68,6 +79,23 @@ export default function FavoritesScreen() {
 
   const ListHeader = () => (
     <View style={styles.headerContainer}>
+      <View style={styles.searchContainer}>
+        <Ionicons name="search" size={18} color={colors.text.secondary} style={{ marginRight: 8 }} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search favorites..."
+          placeholderTextColor={colors.text.placeholder}
+          value={search}
+          onChangeText={setSearch}
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+        {search.length > 0 && (
+          <TouchableOpacity onPress={() => setSearch('')}>
+            <Ionicons name="close-circle" size={18} color={colors.text.secondary} />
+          </TouchableOpacity>
+        )}
+      </View>
       <View style={styles.headerTop}>
         <View>
           <Text style={styles.title}>My Favorites</Text>
@@ -110,7 +138,7 @@ export default function FavoritesScreen() {
   return (
     <View style={styles.container}>
       <FlatList
-        data={favorites}
+        data={filteredFavorites}
         renderItem={renderPlayer}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
@@ -211,5 +239,23 @@ const styles = StyleSheet.create({
     fontWeight: typography.weights.semibold,
     color: colors.surface,
     marginLeft: spacing.sm,
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    marginBottom: 12,
+    marginTop: 4,
+    minHeight: 40,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 15,
+    color: colors.text.primary,
+    paddingVertical: 8,
   },
 }); 

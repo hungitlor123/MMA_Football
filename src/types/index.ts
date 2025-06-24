@@ -37,7 +37,6 @@ export interface TabParamList extends ParamListBase {
   Home: undefined;
   Search: undefined;
   Favorites: undefined;
-  Profile: undefined;
 }
 
 export interface RootStackParamList extends ParamListBase {
