@@ -3,7 +3,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 
 import HomeScreen from '../screens/HomeScreen';
-import SearchScreen from '../screens/SearchScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
 import { colors } from '../styles/colors';
 import { TabParamList } from '../types';
@@ -53,11 +52,6 @@ export default function TabNavigator() {
         name="Home"
         component={HomeScreen}
         options={{ title: 'Players' }}
-      />
-      <Tab.Screen
-        name="Search"
-        component={SearchScreen}
-        options={{ title: 'Search' }}
       />
       <Tab.Screen
         name="Favorites"

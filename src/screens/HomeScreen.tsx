@@ -8,6 +8,9 @@ import {
   Image,
   ScrollView,
   Modal,
+  TextInput,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAppDispatch, useAppSelector } from '../service/store/hooks';
@@ -28,6 +31,8 @@ export default function HomeScreen() {
 
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [teamModalVisible, setTeamModalVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   const positionCounts: Record<string, number> = {};
   players.forEach(player => {
@@ -88,6 +93,9 @@ export default function HomeScreen() {
     if (showFavoritesOnly) {
       data = data.filter(player => isFavorite(player.id));
     }
+    if (searchQuery.trim()) {
+      data = data.filter(player => player.playerName.toLowerCase().includes(searchQuery.toLowerCase()));
+    }
     return data;
   };
 
@@ -101,72 +109,103 @@ export default function HomeScreen() {
   );
 
   return (
-    <View style={styles.container}>
-      {/* Header bóng đá */}
-      <View style={styles.header}>
-        <View style={styles.headerContent}>
-          <Image source={require('../../assets/icon.png')} style={styles.logo} />
-          <View>
-            <Text style={styles.headerTitle}>FootWatch</Text>
-            <Text style={styles.headerSubtitle}>{getDisplayData().length} players</Text>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        {/* Header bóng đá */}
+        <View style={styles.header}>
+          <View style={styles.headerContent}>
+            <Image source={require('../../assets/icon.png')} style={styles.logo} />
+            <View>
+              <Text style={styles.headerTitle}>FootWatch</Text>
+              <Text style={styles.headerSubtitle}>{getDisplayData().length} players</Text>
+            </View>
           </View>
         </View>
-      </View>
 
-      {/* Filter chip */}
-      <View style={styles.filtersContainer}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filtersContent}>
-          {positions.map((item) => (
-            <TouchableOpacity
-              key={item}
-              style={[
-                styles.chip,
-                (selectedPosition === item || (item === 'All' && !selectedPosition)) && styles.chipActive
-              ]}
-              onPress={() => handlePositionFilter(item)}
-              activeOpacity={0.85}
-            >
-              <Text style={[
-                styles.chipText,
-                (selectedPosition === item || (item === 'All' && !selectedPosition)) && styles.chipTextActive
-              ]}>
-                {item}
-                {item !== 'All' && (
-                  <Text style={styles.chipCount}>  ({positionCounts[item]})</Text>
-                )}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      </View>
-
-      {/* Players List */}
-      <FlatList
-        data={getDisplayData()}
-        renderItem={renderPlayer}
-        keyExtractor={(item) => item.id}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.playersContainer}
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
+        {/* Search box */}
+        <View style={styles.searchContainer}>
+          <View style={[styles.searchInputContainer, isSearchFocused && styles.searchInputFocused]}>
             <Ionicons
-              name={showFavoritesOnly ? 'heart-outline' : 'football'}
-              size={48}
-              color={colors.primary}
+              name="search"
+              size={20}
+              color={isSearchFocused ? colors.primary : colors.text.secondary}
+              style={styles.searchIcon}
             />
-            <Text style={styles.emptyTitle}>
-              {showFavoritesOnly ? 'No favorite players' : 'No players found'}
-            </Text>
-            <Text style={styles.emptyDescription}>
-              {showFavoritesOnly
-                ? 'Add some players to your favorites to see them here'
-                : 'Check your internet connection or try again'
-              }
-            </Text>
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search by player name..."
+              placeholderTextColor={colors.text.placeholder}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setIsSearchFocused(false)}
+              autoCapitalize="none"
+              autoCorrect={false}
+              returnKeyType="search"
+            />
+            {searchQuery.length > 0 && (
+              <TouchableOpacity style={styles.clearButton} onPress={() => setSearchQuery('')}>
+                <Ionicons name="close-circle" size={20} color={colors.text.secondary} />
+              </TouchableOpacity>
+            )}
           </View>
-        }
-      />
-    </View>
+        </View>
+
+        {/* Filter chip */}
+        <View style={styles.filtersContainer}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filtersContent}>
+            {positions.map((item) => (
+              <TouchableOpacity
+                key={item}
+                style={[
+                  styles.chip,
+                  (selectedPosition === item || (item === 'All' && !selectedPosition)) && styles.chipActive
+                ]}
+                onPress={() => handlePositionFilter(item)}
+                activeOpacity={0.85}
+              >
+                <Text style={[
+                  styles.chipText,
+                  (selectedPosition === item || (item === 'All' && !selectedPosition)) && styles.chipTextActive
+                ]}>
+                  {item}
+                  {item !== 'All' && (
+                    <Text style={styles.chipCount}>  ({positionCounts[item]})</Text>
+                  )}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* Players List */}
+        <FlatList
+          data={getDisplayData()}
+          renderItem={renderPlayer}
+          keyExtractor={(item) => item.id}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.playersContainer}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Ionicons
+                name={showFavoritesOnly ? 'heart-outline' : 'football'}
+                size={48}
+                color={colors.primary}
+              />
+              <Text style={styles.emptyTitle}>
+                {showFavoritesOnly ? 'No favorite players' : 'No players found'}
+              </Text>
+              <Text style={styles.emptyDescription}>
+                {showFavoritesOnly
+                  ? 'Add some players to your favorites to see them here'
+                  : 'Check your internet connection or try again'
+                }
+              </Text>
+            </View>
+          }
+        />
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -318,5 +357,41 @@ const styles = StyleSheet.create({
     color: colors.text.secondary,
     textAlign: 'center',
     lineHeight: 22,
+  },
+  searchContainer: {
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.sm,
+    backgroundColor: colors.background,
+  },
+  searchInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: borderRadius.md,
+    paddingHorizontal: spacing.md,
+    minHeight: 48,
+  },
+  searchInputFocused: {
+    borderColor: colors.primary,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  searchIcon: {
+    marginRight: spacing.sm,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: typography.sizes.md,
+    color: colors.text.primary,
+    paddingVertical: spacing.md,
+  },
+  clearButton: {
+    padding: spacing.xs,
   },
 }); 
